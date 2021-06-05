@@ -1,0 +1,32 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<table  cellspacing="10" cellpadding="10">
+    <caption>今天发财了吗？</caption>
+    <p th:text="${'查询时间：' + #dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd hh:mm:ss')}"></p>
+<thead>
+    <th>序号</th>
+    <th>基金代码</th>
+    <th>基金名称</th>
+    <th>持有份额</th>
+    <th>净值估算</th>
+    <th>预计盈利</th>
+</thead>
+<tbody>
+    <th:block th:if="${infos !=null}">
+        <tr th:each="fund, state: ${infos}">
+            <td th:text="${state.count}"/>
+            <td th:text="${fund.fundCode}"/>
+            <td th:text="${fund.name}"/>
+            <td th:text="${fund.cyfe}"/>
+            <td th:text="${fund.gszzl + '%'}"/>
+            <td th:text="${fund.v}"/>
+        </tr>
+    </th:block>
+    <th:block th:if="${infos==null}">
+        没有结果哟！
+    </th:block>
+<td>总盈利</td><td colspan="5" th:text="${sum}"></td>
+</tbody>
+</table>
+<script>
+    // var s = [[${infos}]];
+</script>

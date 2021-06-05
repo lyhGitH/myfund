@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<configuration>
+
+    <!-- logger 分 5 级: #FATAL-0, #ERROR-3, #WARN-4, #INFO-6, #DEBUG-7 -->
+    <!--
+    %c 输出日志信息所属的类的全名
+    %d 输出日志时间点的日期或时间，默认格式为ISO8601，也可以在其后指定格式，比如：%d{yyy-MM-dd HH:mm:ss }，输出类似：2008-08-08 20:08:08
+    %f 输出日志信息所属的类的类名
+    %l 输出日志事件的发生位置，即输出日志信息的语句处于它所在的类的第几行
+    %m 输出代码中指定的信息，如log(message)中的message
+    %n 输出一个回车换行符，Windows平台为“rn”，Unix平台为“n”
+    %p 输出优先级，即DEBUG，INFO，WARN，ERROR，FATAL。如果是调用debug()输出的，则为DEBUG，依此类推
+    %r 输出自应用启动到输出该日志信息所耗费的毫秒数
+    %t 输出产生该日志事件的线程名
+    -->
+
+    <!-- 打印到控制台
+    org.apache.log4j.ConsoleAppender（输出在控制台）
+    org.apache.log4j.FileAppender（输出到文件） 　　
+    org.apache.log4j.DailyRollingFileAppender（每天产生一个日志文件） 　　
+    org.apache.log4j.RollingFileAppender（文件大小到达指定尺寸的时候产生一个新的文件），
+        可通过log4j.appender.R.MaxFileSize=100KB设置文件大小，还可通过log4j.appender.R.MaxBackupIndex=1设置为保存　　　　　　　　　　　　　　　　　　　　一个备份文件
+    org.apache.log4j.WriterAppender（将日志信息以流格式发送到任意指定的地方）
+    -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+<!--            <pattern>%d{yyy-MM-dd HH:mm:ss.SSS} [%p]: 【%c:%L】 : %msg%n</pattern>-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </layout>
+    </appender>
+
+    <appender name="fileInfoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <!--根据范围过滤，是ERROR过滤，不是的话使用该规则-->
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+            </pattern>
+        </encoder>
+        <!--滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--路径-->
+            <fileNamePattern>./logs/info/%d.log</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="fileErrorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+            </pattern>
+        </encoder>
+        <!--滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--根据日期自动创建本地文件夹-->
+            <fileNamePattern>./logs/error/%d.log</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <!-- level = info/off -->
+    <root>
+        <level value="info" />
+        <appender-ref ref="console" />
+        <appender-ref ref="fileInfoLog"/>
+        <appender-ref ref="fileErrorLog"/>
+    </root>
+
+</configuration>
