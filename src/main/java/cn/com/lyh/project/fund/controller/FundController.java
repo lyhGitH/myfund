@@ -34,7 +34,7 @@ public class FundController {
         // 盈利总和
         double sum = infos.stream().mapToDouble(FundInfo::getV).sum();
         model.addObject("infos", infos);
-        model.addObject("sum", sum);
+        model.addObject("sum", String.format("%.2f", sum));
         return model;
     }
 }
